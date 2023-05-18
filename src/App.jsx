@@ -1,10 +1,12 @@
 import AddBook from "./AddBook";
 import BookList from "./BookList";
+import Counter from "./Counter";
 
-function Bookshelf() {
+function Bookshelf(props) {
   return (
     <div>
-      <h1>My Bookshelf</h1>
+      {/* DO NOT DESCTRUCTURE PROPS, it's a solid thing. */}
+      <h1>{props.name}&apos;s Bookshelf</h1>
       <BookList />
       <AddBook />
     </div>
@@ -14,7 +16,8 @@ function Bookshelf() {
 export default function App() {
   return (
     <>
-      <Bookshelf />
+      <Bookshelf name="Sam"/>
+      <Counter />
     </>
   );
 }
