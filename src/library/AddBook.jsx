@@ -1,5 +1,5 @@
 import { createResource, createSignal, For, Show } from "solid-js";
-import { searchBooks } from "./api/utils";
+import { searchBooks } from "./utils";
 
 export default function AddBook(props) {
 	const [input, setInput] = createSignal("");
