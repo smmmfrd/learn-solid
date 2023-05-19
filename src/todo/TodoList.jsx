@@ -4,9 +4,7 @@ import AddTodo from "./AddTodo";
 export default function TodoList(props) {
 	const [todos, setTodos] = createSignal([]);
 
-	createEffect(() => {
-		// console.log(todos());
-	})
+	
 
 	return (
 		<>
@@ -38,15 +36,13 @@ function Todo(props) {
 
 	createEffect(() => {
 		props.setDone(done());
-	})
-
-	const style = {
-		"text-decoration": `${props.done ? "line-through" : "none"}`,
-		"color": `${props.done ? "grey" : "inherit"}`
-	}
+	});
 
 	return (
-		<li style={style}>
+		<li style={{
+			"text-decoration": `${done() ? "line-through" : "none"}`,
+			"color": `${done() ? "grey" : "inherit"}`
+		}}>
 			{props.text}
 			<input type="checkbox"
 				checked={props.done}
