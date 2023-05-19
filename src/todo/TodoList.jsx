@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Index } from "solid-js";
+import { createEffect, createSignal, For } from "solid-js";
 import AddTodo from "./AddTodo";
 
 export default function TodoList(props) {
@@ -15,19 +15,25 @@ export default function TodoList(props) {
 			<h1>{props.name}&apos;s Todo List from Solid</h1>
 
 			<ul>
-				<Index each={todos()}>
+				<For each={todos()}>
 					{(todo, i) => (
 						<Todo
-							text={todo().text}
-							done={todo().done}
+							text={todo.text}
+							done={todo.done}
 							setDone={(value) => {
 								setTodos(prev => {
-									prev[i].done = value;
+									prev[i()].done = value;
 									return [...prev];
 								});
-							}} />
+							}} 
+							deleteThis={() => {
+								setTodos(prev => {
+									return prev.filter((_, index) => index !== i());
+								})
+							}}
+							/>
 					)}
-				</Index>
+				</For>
 			</ul>
 
 			<AddTodo setTodos={setTodos} />
@@ -38,6 +44,7 @@ export default function TodoList(props) {
 function Todo(props) {
 	const [done, setDone] = createSignal(props.done);
 
+	
 	createEffect(() => {
 		props.setDone(done());
 	});
@@ -49,9 +56,14 @@ function Todo(props) {
 		}}>
 			{props.text}
 			<input type="checkbox"
-				checked={props.done}
-				onChange={() => setDone(!done())}
+				checked={done()}
+				onInput={() => setDone(!done())}
 			/>
+			<button
+				onClick={props.deleteThis}
+			>
+				Delete
+			</button>
 		</li>
 	)
 }
