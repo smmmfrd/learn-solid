@@ -3,6 +3,11 @@ import { createSignal } from "solid-js"
 export default function AddTodo(props) {
 	const [input, setInput] = createSignal("");
 
+	const newTodo = (text) => ({
+		text,
+		done: false
+	});
+
 	return (
 		<form>
 			<label>
@@ -16,7 +21,9 @@ export default function AddTodo(props) {
 				type="submit"
 				onClick={(e) => {
 					e.preventDefault();
-					props.setTodos(todos => [...todos, input()]);
+					if (input().length > 0) {
+						props.setTodos(todos => [...todos, newTodo(input())]);
+					}
 					setInput("");
 				}}
 			>
