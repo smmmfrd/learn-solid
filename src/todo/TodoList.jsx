@@ -4,7 +4,11 @@ import AddTodo from "./AddTodo";
 export default function TodoList(props) {
 	const [todos, setTodos] = createSignal([]);
 
-	
+	setTodos(JSON.parse(localStorage.getItem('solid-todos')));
+
+	createEffect(() => {
+		localStorage.setItem('solid-todos', JSON.stringify(todos()));
+	})
 
 	return (
 		<>
