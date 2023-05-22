@@ -1,4 +1,4 @@
-import { createSignal, For } from "solid-js";
+import { createEffect, createSignal, For } from "solid-js";
 
 const dieResults = [1,2,3,4,5,6];
 
@@ -24,9 +24,21 @@ export default function Tenzies() {
 		})));
 	}
 
+	createEffect(() => {
+		if(dice().every(die => die.locked)) {
+			let chosenValue = dice()[0].value;
+			if(dice().every(die => die.value === chosenValue)) {
+				setTimeout(() => setDice(startingValues), 100);
+			} else {
+				setDice(prevDice => prevDice.map(die => ({...die, locked: !die.locked})))
+			}
+		}
+	});
+
 	return (
 		<>
 			<h1>Tenzies</h1>
+			<p>Try to make each dice the same value!</p>
 			<For each={dice()} fallback={<p>no values</p>}>{(die, index) => {
 				const locked = die.locked;
 				return (
