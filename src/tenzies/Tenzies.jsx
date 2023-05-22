@@ -1,4 +1,6 @@
-import { createEffect, createSignal, For } from "solid-js";
+import { createEffect, createSignal, For, Switch } from "solid-js";
+
+import { Playing, Won, Lost } from "./GameStates"
 
 const dieResults = [1,2,3,4,5,6];
 
@@ -28,9 +30,11 @@ export default function Tenzies() {
 		if(dice().every(die => die.locked)) {
 			let chosenValue = dice()[0].value;
 			if(dice().every(die => die.value === chosenValue)) {
-				setTimeout(() => setDice(startingValues), 100);
+				setTimeout(() => setDice(startingValues), 500);
 			} else {
-				setDice(prevDice => prevDice.map(die => ({...die, locked: !die.locked})))
+				setTimeout(() => {
+					setDice(prevDice => prevDice.map(die => ({...die, locked: !die.locked})))
+				}, 500);
 			}
 		}
 	});
@@ -38,7 +42,16 @@ export default function Tenzies() {
 	return (
 		<>
 			<h1>Tenzies</h1>
-			<p>Try to make each dice the same value!</p>
+
+			<Switch fallback={<Playing />}>
+				<Match when={dice().every(die => die.locked) && dice().reduce((total, die) => total + die.value, 0) % 5 === 0}>
+					<Won />
+				</Match>
+				<Match when={dice().every(die => die.locked) && dice().reduce((total, die) => total + die.value, 0) % 5 !== 0}>
+					<Lost />
+				</Match>
+			</Switch>
+
 			<For each={dice()} fallback={<p>no values</p>}>{(die, index) => {
 				const locked = die.locked;
 				return (
@@ -57,6 +70,8 @@ export default function Tenzies() {
 				)
 			}
 			}</For>
+
+			<br />
 			<button onClick={handleRoll}>Roll Dice</button>
 		</>
 	);
