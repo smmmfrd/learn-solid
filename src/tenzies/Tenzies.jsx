@@ -1,12 +1,15 @@
 import { createSignal, For } from "solid-js";
 
-const rollDie = () => {
-	return Math.ceil(Math.random() * 6);
+const dieResults = [1,2,3,4,5,6];
+
+const rollDie = (prevValue) => {
+	const filteredResults = dieResults.filter(val => val !== prevValue);
+	return filteredResults[Math.floor(Math.random() * filteredResults.length)];
 }
 
 const startingValues = () => {
 	return Array(5).fill(0).map(() => ({
-		value: rollDie(),
+		value: rollDie(0),
 		locked: false
 	}));
 }
@@ -17,7 +20,7 @@ export default function Tenzies() {
 	const handleRoll = () => {
 		setDice(prevDice => prevDice.map(die => ({
 			...die,
-			value: die.locked ? die.value : rollDie(),
+			value: die.locked ? die.value : rollDie(die.value),
 		})));
 	}
 
